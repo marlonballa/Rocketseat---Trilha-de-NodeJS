@@ -1,3 +1,4 @@
+const { response } = require("express");
 const express = require("express");
 const app = express();
 
@@ -17,14 +18,14 @@ const users = [];
  * statement: Array
  */
 app.post("/account", (req, res) => {
-    //Recebe o nome do usuário no corpo da requisição. 
-    const nameUser = req.body;
-    //Recebe o CPF do usuário no corpo da requisição. 
-    const cpfUser = req.body;
-
+    const { nameUser, cpfUser } = req.body;
     /**
-     * Poderia ser feito utilizando a desestruturação:
-     * const { nameUser, cpfUser = req.body}
+     * Poderia ser feito da seguinte maneira:
+     * 
+     * Recebe o nome do usuário no corpo da requisição. 
+     * const nameUser = req.body;
+     * Recebe o CPF do usuário no corpo da requisição. 
+     * const cpfUser = req.body;
      */
 
     /**
@@ -57,13 +58,43 @@ app.post("/account", (req, res) => {
             cpfUser,
             nameUser,
             idUser,
-            //Poderia ser: idUser: uuidV4()
-            statementStored: []
+            statement: [],
         });
 
         //O status 201 deve ser retornado sempre que houver a criação de novas informações.
         return res.status(201).send();
     }
 });
+
+/**
+ * Buscando as informações do extrato bancário do cliente
+ * app.get("/statement/:cpfUser", (req, res) => {
+ *  const { cpfUser } = req.params
+ * });
+ * 
+ * Esta seria uma forma de receber o valor do CPF do cliente, utilizando Rote Params, mas ela não é segura, pois expõe uma informação confidencial do cliente.
+ * * É necessário converter o valor que recebemos na URL pois ele é armazenado como string e não como Number, o que impediria a verificação de "extritamente igual". 
+ */
+app.get("/statement", (req, res) => {
+    //Pega o CPF do usuário, que foi enviado pela URL.
+    const { cpfUser } = req.headers;
+    /**
+     * Vamos utilizar o método Find, ao invés do Some para fazer a comparação do CPF. 
+     * Pois o Some retorna um boolean, enquanto o Find retorna o objeto.
+     * Ou seja, o método Find percorrerá o Array e, caso encontre, retornará o objeto solicitado.
+     */
+    const user = users.find((user) => user.cpfUser === cpfUser); 
+    /**
+     * Caso o usuário não existir, esta informação deverá ser apresentada.
+     */
+
+    if (!user) {
+        return res.status(400).json({ error: "User not found"}); 
+    }
+    /**
+     * Uma vez que o objeto foi encontrado, vamos retornar seu extrato bancário. 
+     */
+    return res.json(user.statement);
+})
 
 app.listen(8080, console.log("Aplicação rodando na porta: 8080."));

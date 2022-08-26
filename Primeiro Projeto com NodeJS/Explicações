@@ -3,8 +3,8 @@ Neste projeto vamos contruir uma API para uma financeira.
 ## FinAPI - Financeira
 
 ## Requisitos:
-- [] Deve ser possível criar uma conta. 
-- [] Deve ser possível buscar o estrato bancário do cliente. 
+- [X] Deve ser possível criar uma conta. 
+- [X] Deve ser possível buscar o estrato bancário do cliente. 
 - [] Deve ser possível realizar depósito. 
 - [] Deve ser possível realizar saque. 
 - [] Deve ser possível buscar o estrato bancário do cliente por data. 
@@ -13,12 +13,19 @@ Neste projeto vamos contruir uma API para uma financeira.
 - [] Deve ser possível deletar uma conta.
 
 ## Regras de Negócio
-- [] Não deve ser possível cadastrar uma conta com CPF já existente. 
+- [X] Não deve ser possível cadastrar uma conta com CPF já existente. 
+- [X] Não deve ser possível buscar extrato numa conta inexistente. 
 - [] Não deve ser possível fazer depósito numa conta inexistente. 
-- [] Não deve ser possível buscar extrato numa conta inexistente. 
 - [] Não deve ser possível fazer saque numa conta inexistente. 
 - [] Não deve ser possível excluir uma conta inexistente. 
 - [] Não deve ser possível fazer saque quando o saldo for insuficiente. 
 
 ## UUID
 - Para utilizarmos o UUID vamos precisar instalar uma biblioteca: yarn add uuid
+
+## HEADER
+- Ambiente de troca de informações entre a aplicação e o back-end.
+
+## MIDDLEWARES
+- "Aquilo que está no meio"
+- Função entre a requisição e a resposta. Geralmente utilizada para validações de tokens, nível de permissão e muitas outras coisas. 
