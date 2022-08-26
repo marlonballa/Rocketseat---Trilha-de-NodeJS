@@ -1,0 +1,21 @@
+Neste projeto vamos contruir uma API para uma financeira.
+
+## FinAPI - Financeira
+
+## Requisitos:
+- [] Deve ser possível criar uma conta. 
+- [] Deve ser possível buscar o estrato bancário do cliente. 
+- [] Deve ser possível realizar depósito. 
+- [] Deve ser possível realizar saque. 
+- [] Deve ser possível buscar o estrato bancário do cliente por data. 
+- [] Deve ser possível atualizar dados da conta do cliente. 
+- [] Deve ser possível obter dados da conta do cliente. 
+- [] Deve ser possível deletar uma conta.
+
+## Regras de Negócio
+- [] Não deve ser possível cadastrar uma conta com CPF já existente. 
+- [] Não deve ser possível fazer depósito numa conta inexistente. 
+- [] Não deve ser possível buscar extrato numa conta inexistente. 
+- [] Não deve ser possível fazer saque numa conta inexistente. 
+- [] Não deve ser possível excluir uma conta inexistente. 
+- [] Não deve ser possível fazer saque quando o saldo for insuficiente. 
