@@ -19,3 +19,6 @@ Neste projeto vamos contruir uma API para uma financeira.
 - [] Não deve ser possível fazer saque numa conta inexistente. 
 - [] Não deve ser possível excluir uma conta inexistente. 
 - [] Não deve ser possível fazer saque quando o saldo for insuficiente. 
+
+## UUID
+- Para utilizarmos o UUID vamos precisar instalar uma biblioteca: yarn add uuid
