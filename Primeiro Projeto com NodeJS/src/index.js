@@ -120,4 +120,28 @@ app.get("/statement", verifyIfExistsAccountCPF, (req, res) => {
     return res.json(user.statement);
 })
 
+//DEPÓSITO
+app.post("/deposit", verifyIfExistsAccountCPF, (req, res) => {
+    const { description, amount } = req.body;
+    /**
+     * O usuário deverá inserir as informações sobre o depósito, isto é: Descrição e valor.
+     * Estas informações devem ser enviadas para o extrato do usuário (statement)
+     */
+
+    const { user } = req;
+
+    //Informações sobre o depósito
+    const statementOperation = {
+        description,
+        amount,
+        created_at: new Date(),
+        type: "credit"
+    }
+
+    //Inserindo as informações do depósito no extrato do cliente
+    user.statement.push(statementOperation); 
+
+    return res.status(201).send(); 
+})
+
 app.listen(8080, console.log("Aplicação rodando na porta: 8080."));
