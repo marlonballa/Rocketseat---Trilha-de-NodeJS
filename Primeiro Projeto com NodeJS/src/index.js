@@ -17,6 +17,42 @@ const users = [];
  * cpfUser: String
  * statement: Array
  */
+
+/**
+ * Vamos utilizar o conceito de Middlewares para criar funções que cuidarão de etapas intermediárias da nossa aplicação.
+ * Para uma função ser considerada um middleware, ela deve receber três parâmetros: Req, Res, Next
+ * Formas de uso:
+ * app.use(verifyIfExistsCPF); -> Utilizamos um middleware assim quando queremos que todas as rotas após ele o utilizem. 
+ * app.get("statement", verifyIfExistsCPF, (req, res) => {
+ * }) -> Utilizamos dentro da rota, quando desejamos que apenas ela utilize as informações que o middleware possui. 
+ * Por exemplo:
+ * Verificar se existe uma conta associada ao CPF
+ */
+
+//MIDDLEWARE
+function verifyIfExistsAccountCPF(req, res, next) {
+    //Pega o CPF do usuário, que foi enviado pelo Header.
+    const { cpfUser } = req.headers;
+    /**
+     * Vamos utilizar o método Find, ao invés do Some para fazer a comparação do CPF. 
+     * Pois o Some retorna um boolean, enquanto o Find retorna o objeto.
+     * Ou seja, o método Find percorrerá o Array e, caso encontre, retornará o objeto solicitado.
+     */
+    const user = users.find((user) => user.cpfUser === cpfUser); 
+    /**
+     * Caso o usuário não existir, esta informação deverá ser apresentada.
+     */
+    if (!user) {
+        return res.status(400).json({ error: "User not found"}); 
+    }
+
+    //Exporta informações do middleware
+    req.user = user;
+
+    return next();
+}
+
+
 app.post("/account", (req, res) => {
     const { nameUser, cpfUser } = req.body;
     /**
@@ -75,22 +111,9 @@ app.post("/account", (req, res) => {
  * Esta seria uma forma de receber o valor do CPF do cliente, utilizando Rote Params, mas ela não é segura, pois expõe uma informação confidencial do cliente.
  * * É necessário converter o valor que recebemos na URL pois ele é armazenado como string e não como Number, o que impediria a verificação de "extritamente igual". 
  */
-app.get("/statement", (req, res) => {
-    //Pega o CPF do usuário, que foi enviado pela URL.
-    const { cpfUser } = req.headers;
-    /**
-     * Vamos utilizar o método Find, ao invés do Some para fazer a comparação do CPF. 
-     * Pois o Some retorna um boolean, enquanto o Find retorna o objeto.
-     * Ou seja, o método Find percorrerá o Array e, caso encontre, retornará o objeto solicitado.
-     */
-    const user = users.find((user) => user.cpfUser === cpfUser); 
-    /**
-     * Caso o usuário não existir, esta informação deverá ser apresentada.
-     */
-
-    if (!user) {
-        return res.status(400).json({ error: "User not found"}); 
-    }
+app.get("/statement", verifyIfExistsAccountCPF, (req, res) => {
+    //Importa as informações do middleware
+    const { user } = req;
     /**
      * Uma vez que o objeto foi encontrado, vamos retornar seu extrato bancário. 
      */
