@@ -5,7 +5,7 @@ Neste projeto vamos contruir uma API para uma financeira.
 ## Requisitos:
 - [X] Deve ser possível criar uma conta. 
 - [X] Deve ser possível buscar o estrato bancário do cliente. 
-- [] Deve ser possível realizar depósito. 
+- [X] Deve ser possível realizar depósito. 
 - [] Deve ser possível realizar saque. 
 - [] Deve ser possível buscar o estrato bancário do cliente por data. 
 - [] Deve ser possível atualizar dados da conta do cliente. 

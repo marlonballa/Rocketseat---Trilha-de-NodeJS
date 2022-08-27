@@ -1,4 +1,4 @@
-const { response } = require("express");
+const { req, res } = require("express");
 const express = require("express");
 const app = express();
 
@@ -50,6 +50,20 @@ function verifyIfExistsAccountCPF(req, res, next) {
     req.user = user;
 
     return next();
+}
+
+function getBalance(statement) {
+    //A ifnormação reduce transforma muitas informações em uma. 
+    //Acumulador: variável responsável por armazenar o saldo real do usuário. 
+    const balance = statement.reduce((acumulador, operation) => {
+        if(operation.type === 'credit') {
+            return acumulador + operation.amount; 
+        } else {
+            return acumulador - operation.amount; 
+        }
+    }, 0);
+    //Acima informamos o valor que o reduce vai começar; 
+    return balance; 
 }
 
 
@@ -142,6 +156,30 @@ app.post("/deposit", verifyIfExistsAccountCPF, (req, res) => {
     user.statement.push(statementOperation); 
 
     return res.status(201).send(); 
+})
+
+//SAQUE
+app.post("/withdraw", verifyIfExistsAccountCPF, (req, res) => {
+//Qual será o valor do saque?
+    const { amount } = req.body; 
+    const { user } = req;
+
+    const balance = getBalance(user.statement)
+
+    //Verificando se o saldo é maior ou menor que o valor desejado pra saque. 
+    if (balance < amount) {
+        return res.status(400).json({error: "Insufficients funds!"});
+    }
+
+    //Caso exista saldo suficiente
+    const statementOperation = {
+        amount,
+        created_at: new Date(),
+        type: "debit",
+    }
+    user.statement.push(statementOperation); 
+
+    return res.status(201).send()
 })
 
 app.listen(8080, console.log("Aplicação rodando na porta: 8080."));
